@@ -19,7 +19,7 @@ func SetupRouter() *gin.Engine {
 	r.Use(routercommon.Cors())
 
 	r.GET("/topgoer", helloHandler)
-	r.POST("/user/create", createUser)
+	r.POST("/register", createUser)
 	r.POST("/login", login)
 	r.POST("/task/create", createTask)
 	r.POST("/task/page", pageTask)

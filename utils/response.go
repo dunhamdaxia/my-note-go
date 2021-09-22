@@ -25,7 +25,7 @@ func RespErr(c *gin.Context, data ...interface{}) {
 
 func RespSuc(c *gin.Context, data ...interface{}) {
 	returnData := M{
-		"status": false,
+		"status": true,
 		"msg":    "ok",
 	}
 
