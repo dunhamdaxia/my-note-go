@@ -15,7 +15,7 @@ func createUser(c *gin.Context) {
 		return
 	}
 
-	birthdayTime, err := time.ParseInLocation("", paramsData.Birthday, time.Local)
+	birthdayTime, err := time.ParseInLocation("2006-01-02", paramsData.Birthday, time.Local)
 	if err != nil {
 		utils.RespErr(c, "出生日期转换失败|"+err.Error())
 		return
