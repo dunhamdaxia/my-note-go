@@ -1,8 +1,6 @@
 package router
 
 import (
-	"encoding/json"
-	"fmt"
 	"gintest/stores/mysql"
 	"gintest/types/model"
 	"gintest/types/param"
@@ -19,14 +17,11 @@ func createTask(c *gin.Context) {
 		return
 	}
 
-	taskData := model.Task{}
+	taskData := param.TaskCreate{}
 	if err := c.ShouldBindJSON(&taskData); err != nil {
 		utils.RespErr(c, "解析数据出错")
 		return
 	}
-
-	str, _ := json.Marshal(taskData)
-	fmt.Println(string(str))
 
 	if taskData.Name == "" {
 		utils.RespErr(c, "缺少必要的参数:Name")
@@ -38,9 +33,14 @@ func createTask(c *gin.Context) {
 		return
 	}
 
-	taskData.UserID = user.ID
+	newTaskData := model.Task{
+		Name:       taskData.Name,
+		PeriodType: taskData.PeriodType,
+		UserID:     user.ID,
+		Desc:       taskData.Desc,
+	}
 
-	_, err := model.CreateTask(taskData)
+	_, err := model.CreateTask(newTaskData)
 	if err != nil {
 		utils.RespErr(c, err.Error())
 		return
@@ -70,8 +70,13 @@ func pageTask(c *gin.Context) {
 		return
 	}
 
+	where := map[string]interface{}{"user_id": user.ID}
+	if paramData.Status > 0 {
+		where["status"] = paramData.Status
+	}
+
 	tasks := make([]model.Task, 0)
-	db.Where(map[string]interface{}{"status": paramData.Status, "user_id": user.ID}).Limit(paramData.Num).Offset(paramData.Num * (paramData.Page - 1)).Find(&tasks)
+	db.Where(where).Limit(paramData.Num).Offset(paramData.Num * (paramData.Page - 1)).Find(&tasks)
 
 	if db.Error != nil {
 		utils.RespErr(c, db.Error.Error())
