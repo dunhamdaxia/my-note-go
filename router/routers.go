@@ -25,5 +25,8 @@ func SetupRouter() *gin.Engine {
 	r.POST("/task/page", pageTask)
 	r.POST("/task/complete", completeTask)
 	r.POST("/check_token", checkToken)
+	r.POST("/attribute/save", saveAttribute)
+	r.POST("/attribute/page", pageAttributes)
+	r.POST("/attribute/info", infoAttribute)
 	return r
 }
